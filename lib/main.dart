@@ -1,7 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:sanpo/views/screens/multiple_image_screen.dart';  // 追加
+import 'package:provider/provider.dart';
 
-void main() => runApp(MyApp());
+void main() {
+  runApp(
+    ChangeNotifierProvider(
+      create: (context) => RandomWordsModel(),
+      child: MyApp(),
+    ),
+  );
+}
+
 
 class MyApp extends StatelessWidget {
   @override

@@ -2,11 +2,39 @@ import 'dart:io';
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:provider/provider.dart';
 import '../../models/picture.dart';
 import '../widgets/rotatable_image_widget.dart';
 import '../../services/image_service.dart';
 import '../../services/data_service.dart';
 import '../widgets/show_picker_options.dart';
+
+void main() {
+  runApp(
+    ChangeNotifierProvider(
+      create: (context) => RandomWordsModel(),
+      child: MyApp(),
+    ),
+  );
+}
+
+class RandomWordsModel extends ChangeNotifier {
+  List<String> randomWords = [];
+
+  void addWord(String word) {
+    randomWords.add(word);
+    notifyListeners();
+  }
+}
+
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      home: MultipleImageScreen(),
+    );
+  }
+}
 
 class MultipleImageScreen extends StatefulWidget {
   @override
@@ -18,7 +46,6 @@ class _MultipleImageScreenState extends State<MultipleImageScreen> {
   final picker = ImagePicker();
   final imageService = ImageService();
   final dataService = DataService();
-  List<String> randomWords = [];
 
   Future<void> getImageFromCamera() async {
     final pickedFile = await picker.pickImage(source: ImageSource.camera);
@@ -47,20 +74,21 @@ class _MultipleImageScreenState extends State<MultipleImageScreen> {
   Future<void> _loadAndPickRandomWord() async {
     final items = await dataService.loadData('assets/data.json');
     final newRandomWord = items.location[Random().nextInt(items.todo.length)] + items.todo[Random().nextInt(items.todo.length)];
-    setState(() {
-      randomWords.add(newRandomWord);
-    });
+    Provider.of<RandomWordsModel>(context, listen: false).addWord(newRandomWord);
   }
 
   @override
   void initState() {
     super.initState();
+    if(imageService.getSavedImages().isEmpty){
     _loadAndPickRandomWord();
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     List<Picture> savedImages = imageService.getSavedImages();
+    List<String> randomWords = Provider.of<RandomWordsModel>(context).randomWords;
     return Scaffold(
       body: ListView.builder(
         itemCount: max(savedImages.length, randomWords.length),
