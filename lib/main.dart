@@ -2,11 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:sanpo/views/screens/multiple_image_screen.dart';  // 追加
 import 'package:provider/provider.dart';
 import 'package:sanpo/models/random_words_model.dart';
+import 'package:sanpo/models/location_time_model.dart';
 
 void main() {
   runApp(
-    ChangeNotifierProvider(
-      create: (context) => RandomWordsModel(),
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (context) => RandomWordsModel()),
+        ChangeNotifierProvider(create: (context) => LocationTimeModel()),
+      ],
       child: MyApp(),
     ),
   );
