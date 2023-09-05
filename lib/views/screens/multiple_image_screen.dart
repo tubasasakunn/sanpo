@@ -95,13 +95,16 @@ class _MultipleImageScreenState extends State<MultipleImageScreen> {
 }
 
 
-  @override
-  void initState() {
-    super.initState();
-    if (imageService.getSavedImages().isEmpty) {
+@override
+void initState() {
+  super.initState();
+  Future.delayed(Duration.zero, () {
+    if (Provider.of<RandomWordsModel>(context, listen: false).location.isEmpty) {
       _loadAndPickRandomWord();
     }
-  }
+  });
+}
+
 
   @override
   Widget build(BuildContext context) {
