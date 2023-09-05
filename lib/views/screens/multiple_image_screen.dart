@@ -10,6 +10,7 @@ import '../../services/data_service.dart';
 import '../widgets/show_picker_options.dart';
 import '../widgets/random_words_and_image.dart';
 import '../widgets/random_words_card.dart';
+import '../widgets/share_button.dart';
 import '../../models/random_words_model.dart';  // ここでRandomWordsModelをインポート
 import '../../models/location_time_model.dart';
 import 'package:location/location.dart' as loc;  // 位置情報を取得するためのパッケージ
@@ -26,6 +27,7 @@ class _MultipleImageScreenState extends State<MultipleImageScreen> {
   final picker = ImagePicker();
   final imageService = ImageService();
   final dataService = DataService();
+  final GlobalKey _globalKey = GlobalKey();
 
   Future<void> getImageFromCamera() async {
     final pickedFile = await picker.pickImage(source: ImageSource.camera);
@@ -113,14 +115,22 @@ void initState() {
   List<String> todos = Provider.of<RandomWordsModel>(context).todo;
   List<String> citys = Provider.of<LocationTimeModel>(context).city;
   List<String> times = Provider.of<LocationTimeModel>(context).time;
+  bool isCapturingImage = false;
+  void toggleCaptureState() {
+    setState(() {
+      isCapturingImage = !isCapturingImage;
+    });
+  }
 
   return Scaffold(
     body: Stack(
       children: [
-        ListView.builder(
+        RepaintBoundary(
+      key: _globalKey,
+        child: ListView.builder(
           itemCount: max(savedImages.length, locations.length),
           itemBuilder: (context, index) {
-            if (index == locations.length - 1) {
+            if (index == locations.length - 1 && !isCapturingImage) {
 
           return RandomWordsCard(todo: todos[index], location: locations[index]);
             }
@@ -134,13 +144,18 @@ void initState() {
             );
             
           },
-        ),
+        )),
       ],
     ),
-    floatingActionButton: ShowPickerOptions(
+    
+    floatingActionButton: Column(
+      mainAxisAlignment: MainAxisAlignment.end,
+      children: [ShowPickerOptions(
       getImageFromCamera: getImageFromCamera,
       getImageFromGallery: getImageFromGallery,
     ),
+    ShareWidgetButton(globalKey: _globalKey,toggleCaptureState: toggleCaptureState,)
+    ],) 
   );
 }
 
