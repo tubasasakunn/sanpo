@@ -16,16 +16,12 @@ class RandomWordsCard extends StatelessWidget {
         Align(
   alignment: Alignment.centerLeft,
           child: CustomPaint(
-            painter: RightTrianglePainter(triangleSize),
+            painter: RightTrianglePainter(triangleSize,Theme.of(context).colorScheme.primary),
             child: Container(
               padding: EdgeInsets.all(16),
               child: Text(
                 '$location',
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.blue,
-                ),
+                style: Theme.of(context).textTheme.bodyMedium,
               ),
             ),
           ),
@@ -33,16 +29,12 @@ class RandomWordsCard extends StatelessWidget {
 Align(
   alignment: Alignment.centerRight,
           child: CustomPaint(
-            painter: LeftTrianglePainter(triangleSize),
+            painter: LeftTrianglePainter(triangleSize,Theme.of(context).colorScheme.secondary),
             child: Container(
               padding: EdgeInsets.all(16),
               child: Text(
                 '$todo',
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w400,
-                  color: Colors.grey[600],
-                ),
+                style: Theme.of(context).textTheme.bodyMedium,
               ),
             ),
           ),
@@ -54,13 +46,15 @@ Align(
 
 class RightTrianglePainter extends CustomPainter {
   final double triangleSize;
+  final Color paintColor;
+  
 
-  RightTrianglePainter(this.triangleSize);
+  RightTrianglePainter(this.triangleSize,this.paintColor);
 
   @override
   void paint(Canvas canvas, Size size) {
     final Paint paint = Paint()
-      ..color = Colors.orange
+      ..color = paintColor
       ..style = PaintingStyle.fill;
 
     final path = Path()
@@ -82,13 +76,14 @@ class RightTrianglePainter extends CustomPainter {
 
 class LeftTrianglePainter extends CustomPainter {
   final double triangleSize;
+  final Color paintColor;
 
-  LeftTrianglePainter(this.triangleSize);
+  LeftTrianglePainter(this.triangleSize,this.paintColor);
 
   @override
   void paint(Canvas canvas, Size size) {
     final Paint paint = Paint()
-      ..color = Colors.green
+      ..color = paintColor
       ..style = PaintingStyle.fill;
 
     final path = Path()
