@@ -26,13 +26,19 @@ class MyApp extends StatelessWidget {
       title: 'Random Item Picker',
       theme: ThemeData(
         brightness: Brightness.light,
-  backgroundColor: Color(0xFFFFFFFF), // 背景色
         colorScheme: ColorScheme.light(
         primary:  Color(0xFFCCCCCC), // locationCardの背景
         secondary: Color(0xFFAAAAAA), //todoCardの背景
+        background: Color(0xFF1498B2),
+        onBackground: Color(0xFFFFFFFF),
         ),
   textTheme: TextTheme(
-    bodySmall: TextStyle(color: Color(0xFF666666)), // 初期画面の選択肢
+    labelMedium: TextStyle(color: Color(0xFFFFFFFF),fontFamily: 'QuickSand',
+    fontWeight: FontWeight.bold,
+    fontSize: 46), 
+    labelSmall: TextStyle(color: Color(0xFFFFFFFF),fontFamily: 'QuickSand',
+    fontWeight: FontWeight.bold,
+    fontSize: 20), // 初期画面の選択肢
     bodyMedium: TextStyle(color: Color(0xFF666666)), // カードの文字
   ),
   elevatedButtonTheme: ElevatedButtonThemeData(
@@ -47,6 +53,8 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.dark(
         primary:  Color(0xFF666666), 
         secondary: Color(0xFF999999),
+        background: Color(0x1498B2),
+        onBackground: Color(0x000000),
         ),
   textTheme: TextTheme(
     bodySmall: TextStyle(color: Color(0xFFAAAAAA)),
@@ -67,26 +75,49 @@ class MyApp extends StatelessWidget {
 class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => MultipleImageScreen(),  // 追加
-                  ),
-                );
-              },
-              child: Text('すたーと',style: Theme.of(context).textTheme.bodySmall,),  // 追加
-            ),
-          ],
+  return Scaffold(
+    backgroundColor: Theme.of(context).colorScheme.background,
+    body: Stack(
+      children: [
+        Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              SizedBox(height: 20),
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => MultipleImageScreen(),
+                    ),
+                  );
+                },
+                child: Text('Start', style: Theme.of(context).textTheme.labelMedium),
+                style: ElevatedButton.styleFrom(
+                  primary: Theme.of(context).colorScheme.background,
+                  elevation: 0.0,
+                ),
+              ),
+            ],
+          ),
         ),
-      ),
-    );
-  }
+        Positioned(
+          bottom: 20,
+          right: 20,
+          child: ElevatedButton(
+            onPressed: () {
+              // onPressedは空白
+            },
+            child: Text('Reset', style: Theme.of(context).textTheme.labelSmall),
+            style: ElevatedButton.styleFrom(
+              primary: Theme.of(context).colorScheme.background,
+              elevation: 0.0,
+            ),
+          ),
+        ),
+      ],
+    ),
+  );
+}
 }
