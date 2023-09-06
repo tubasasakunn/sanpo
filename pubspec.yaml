@@ -45,6 +45,7 @@ dependencies:
   flutter_widget_to_image: ^0.0.1
   share: ^2.0.4
   share_plus: ^7.1.0
+  google_mobile_ads: ^3.0.0
 
 dev_dependencies:
   flutter_test:

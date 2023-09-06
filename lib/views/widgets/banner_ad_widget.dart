@@ -48,6 +48,6 @@ class _BannerAdWidgetState extends State<BannerAdWidget> {
             width: _bannerAd.size.width.toDouble(),
             height: _bannerAd.size.height.toDouble(),
           )
-        : Container(child: Text('広告'));
+        : Container();
   }
 }
