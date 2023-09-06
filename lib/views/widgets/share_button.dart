@@ -36,7 +36,7 @@ class ShareWidgetButton extends StatelessWidget {
         shareWidgetImage(globalKey);
       },
       tooltip: 'Share Widget',
-      child: Icon(Icons.share),
+      child: Icon(Icons.share,color: Theme.of(context).colorScheme.onBackground),
       backgroundColor: Theme.of(context).colorScheme.background,
     );
   }

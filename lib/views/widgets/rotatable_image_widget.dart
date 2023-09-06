@@ -69,7 +69,7 @@ class RotatableImageWidget extends StatelessWidget {
             decoration: BoxDecoration(
               shape: BoxShape.circle,
               border: Border.all(
-                  color: Theme.of(context).colorScheme.background, // ランダムな色
+                  color: Theme.of(context).colorScheme.background, 
                   width: 2, // 枠線の幅
                 ),
               image: DecorationImage(
