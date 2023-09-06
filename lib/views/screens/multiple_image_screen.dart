@@ -134,7 +134,9 @@ void initState() {
       children: [
         RepaintBoundary(
       key: _globalKey,
-        child: ListView.builder(
+        child: Container(
+          color: Theme.of(context).colorScheme.onBackground,
+          child: ListView.builder(
           padding: EdgeInsets.only(bottom: 200.0,top: 50),
           itemCount: max(savedImages.length, locations.length),
           itemBuilder: (context, index) {
@@ -152,7 +154,7 @@ void initState() {
             );
             
           },
-        )),
+        ))),
       Positioned(
         bottom: 0,
         left: 0,
