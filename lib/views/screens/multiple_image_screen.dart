@@ -17,6 +17,7 @@ import '../../models/location_time_model.dart';
 import 'package:location/location.dart' as loc;  // 位置情報を取得するためのパッケージ
 import 'package:intl/intl.dart';
 import 'package:geocoding/geocoding.dart';
+import '../widgets/interstitial_ad_manager.dart';
 
 class MultipleImageScreen extends StatefulWidget {
   @override
@@ -29,6 +30,7 @@ class _MultipleImageScreenState extends State<MultipleImageScreen> {
   final imageService = ImageService();
   final dataService = DataService();
   final GlobalKey _globalKey = GlobalKey();
+  final InterstitialAdManager interstitialAdManager = InterstitialAdManager();
 
   Future<void> getImageFromCamera() async {
     final pickedFile = await picker.pickImage(source: ImageSource.camera);
@@ -39,6 +41,7 @@ class _MultipleImageScreenState extends State<MultipleImageScreen> {
         imageService.saveImage(Picture(_image!));
         _loadAndPickRandomWord();
         _getCurrentLocationAndTime();
+        interstitialAdManager.showInterstitialAd();
       }
     });
   }
@@ -52,6 +55,7 @@ class _MultipleImageScreenState extends State<MultipleImageScreen> {
         imageService.saveImage(Picture(_image!));
         _loadAndPickRandomWord();
         _getCurrentLocationAndTime();
+        interstitialAdManager.showInterstitialAd();
       }
     });
   }
@@ -101,6 +105,7 @@ class _MultipleImageScreenState extends State<MultipleImageScreen> {
 @override
 void initState() {
   super.initState();
+  interstitialAdManager.interstitialAd();
   Future.delayed(Duration.zero, () {
     if (Provider.of<RandomWordsModel>(context, listen: false).location.isEmpty) {
       _loadAndPickRandomWord();
