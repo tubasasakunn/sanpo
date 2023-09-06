@@ -16,12 +16,15 @@ class TimeAndLocationWidget extends StatelessWidget {
           children: [
             Text(
               '$time',
-              style: TextStyle(fontSize: 9),
+              style: Theme.of(context).textTheme.bodySmall!.copyWith(
+    fontWeight: FontWeight.bold,  // 太字にする
+    fontSize: 14,  // フォントサイズを大きくする（オプション）
+  ),
             ),
             SizedBox(height: 2),
             Text(
               '$city',
-              style: TextStyle(fontSize: 9),
+              style: Theme.of(context).textTheme.bodySmall,
             ),
           ],
         ),
@@ -32,7 +35,7 @@ class TimeAndLocationWidget extends StatelessWidget {
 
           child: Container(
             width: 1.0,
-            color: Colors.black,
+            color: Theme.of(context).colorScheme.background,
           ),
         ),
       ],

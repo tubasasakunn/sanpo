@@ -44,6 +44,7 @@ class ShowPickerOptions extends StatelessWidget {
       },
       tooltip: 'Pick Image',
       child: Icon(Icons.add_a_photo),
+      backgroundColor: Theme.of(context).colorScheme.background,
     );
   }
 }

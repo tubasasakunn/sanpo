@@ -39,7 +39,15 @@ class MyApp extends StatelessWidget {
     labelSmall: TextStyle(color: Color(0xFFFFFFFF),fontFamily: 'QuickSand',
     fontWeight: FontWeight.bold,
     fontSize: 20), // 初期画面の選択肢
-    bodyMedium: TextStyle(color: Color(0xFF666666)), // カードの文字
+    bodyLarge: TextStyle(color: Color(0xFFFFFFFF),fontFamily: 'QuickSand',
+    fontWeight: FontWeight.bold,
+    fontSize: 24),
+    bodyMedium: TextStyle(color: Color(0xFF1498B2),fontFamily: 'QuickSand',
+    fontWeight: FontWeight.bold,
+    fontSize: 16),
+    bodySmall: TextStyle(color: Color(0xFF1498B2),fontFamily: 'QuickSand',
+    fontWeight: FontWeight.bold,
+    fontSize: 9),
   ),
   elevatedButtonTheme: ElevatedButtonThemeData(
     style: ElevatedButton.styleFrom(

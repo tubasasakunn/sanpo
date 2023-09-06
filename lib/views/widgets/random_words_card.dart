@@ -16,25 +16,26 @@ class RandomWordsCard extends StatelessWidget {
         Align(
   alignment: Alignment.centerLeft,
           child: CustomPaint(
-            painter: RightTrianglePainter(triangleSize,Theme.of(context).colorScheme.primary),
+            painter: RightTrianglePainter(triangleSize,Theme.of(context).colorScheme.background),
             child: Container(
               padding: EdgeInsets.all(16),
               child: Text(
                 '$location',
-                style: Theme.of(context).textTheme.bodyMedium,
+                style: Theme.of(context).textTheme.bodyLarge,
               ),
             ),
           ),
         ),
+        SizedBox(height: 14),
 Align(
   alignment: Alignment.centerRight,
           child: CustomPaint(
-            painter: LeftTrianglePainter(triangleSize,Theme.of(context).colorScheme.secondary),
+            painter: LeftTrianglePainter(triangleSize,Theme.of(context).colorScheme.background),
             child: Container(
               padding: EdgeInsets.all(16),
               child: Text(
                 '$todo',
-                style: Theme.of(context).textTheme.bodyMedium,
+                style: Theme.of(context).textTheme.bodyLarge,
               ),
             ),
           ),

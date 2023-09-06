@@ -69,8 +69,8 @@ class RotatableImageWidget extends StatelessWidget {
             decoration: BoxDecoration(
               shape: BoxShape.circle,
               border: Border.all(
-                  color: getRandomColor(imageFile.toString()), // ランダムな色
-                  width: 1.4, // 枠線の幅
+                  color: Theme.of(context).colorScheme.background, // ランダムな色
+                  width: 2, // 枠線の幅
                 ),
               image: DecorationImage(
                 fit: BoxFit.cover,

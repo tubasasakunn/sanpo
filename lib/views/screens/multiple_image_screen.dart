@@ -123,6 +123,7 @@ void initState() {
   }
 
   return Scaffold(
+    backgroundColor: Theme.of(context).colorScheme.onBackground,
     body: Stack(
       children: [
         RepaintBoundary(
@@ -150,11 +151,13 @@ void initState() {
     
     floatingActionButton: Column(
       mainAxisAlignment: MainAxisAlignment.end,
-      children: [ShowPickerOptions(
+      children: [
+        ShareWidgetButton(globalKey: _globalKey,toggleCaptureState: toggleCaptureState,),
+    SizedBox(height: 14),
+    ShowPickerOptions(
       getImageFromCamera: getImageFromCamera,
       getImageFromGallery: getImageFromGallery,
-    ),
-    ShareWidgetButton(globalKey: _globalKey,toggleCaptureState: toggleCaptureState,)
+    )
     ],) 
   );
 }

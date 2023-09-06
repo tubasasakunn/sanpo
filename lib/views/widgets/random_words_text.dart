@@ -8,9 +8,23 @@ class RandomWordsText extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Text(
+    return Stack(
+      children: [
+        Text(
       '$location\n$todo',
+      style: Theme.of(context).textTheme.bodyMedium,
       softWrap: true,
-    );
+    ),
+    Positioned(
+          left: 0,
+          bottom: 0,
+          right: 0,
+
+          child: Container(
+            height: 1.0,
+            color: Theme.of(context).colorScheme.background,
+          ),
+        )]
+        );
   }
 }
