@@ -15,7 +15,7 @@ class _BannerAdWidgetState extends State<BannerAdWidget> {
     super.initState();
 
     _bannerAd = BannerAd(
-      adUnitId: 'ca-app-pub-1282226807235434/1165725161', // テスト用ID、実際には自分の広告ユニットIDを使用してください
+      adUnitId: 'ca-app-pub-3940256099942544/6300978111', // テスト用ID、実際には自分の広告ユニットIDを使用してください
       request: AdRequest(),
       size: AdSize.banner,
       listener: BannerAdListener(
@@ -25,6 +25,7 @@ class _BannerAdWidgetState extends State<BannerAdWidget> {
           });
         },
         onAdFailedToLoad: (Ad ad, LoadAdError error) {
+          print('Ad failed to load: $error');
           ad.dispose();
         },
       ),
@@ -47,6 +48,6 @@ class _BannerAdWidgetState extends State<BannerAdWidget> {
             width: _bannerAd.size.width.toDouble(),
             height: _bannerAd.size.height.toDouble(),
           )
-        : Container();
+        : Container(child: Text('広告'));
   }
 }
