@@ -3,8 +3,11 @@ import 'package:sanpo/views/screens/multiple_image_screen.dart';  // 追加
 import 'package:provider/provider.dart';
 import 'package:sanpo/models/random_words_model.dart';
 import 'package:sanpo/models/location_time_model.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  MobileAds.instance.initialize();
   runApp(
     MultiProvider(
       providers: [

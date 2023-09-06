@@ -5,6 +5,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import '../../models/picture.dart';
 import '../widgets/rotatable_image_widget.dart';
+import '../widgets/banner_ad_widget.dart';
 import '../../services/image_service.dart';
 import '../../services/data_service.dart';
 import '../widgets/show_picker_options.dart';
@@ -129,6 +130,7 @@ void initState() {
         RepaintBoundary(
       key: _globalKey,
         child: ListView.builder(
+          padding: EdgeInsets.only(bottom: 200.0,top: 50),
           itemCount: max(savedImages.length, locations.length),
           itemBuilder: (context, index) {
             if (index == locations.length - 1 && !isCapturingImage) {
@@ -146,6 +148,12 @@ void initState() {
             
           },
         )),
+      Positioned(
+        bottom: 0,
+        left: 0,
+        right: 0,
+        child: BannerAdWidget(),
+      ),
       ],
     ),
     
