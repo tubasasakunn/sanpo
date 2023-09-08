@@ -18,7 +18,13 @@ class ImageService {
 Future<void> loadSavedImages() async {
   
   final dir = await getApplicationDocumentsDirectory();
-  final savedImagePaths = Directory('${dir.path}/saved_images/').listSync();
+  final imageDir = Directory('${dir.path}/saved_images/');
+    if (!imageDir.existsSync()) {
+    // ディレクトリが存在しない場合は作成
+    imageDir.createSync(recursive: true);
+  }
+
+  final savedImagePaths = imageDir.listSync();
   for (var path in savedImagePaths) {
     if (path is File) {
       savedImages.add(Picture(File(path.path)));
