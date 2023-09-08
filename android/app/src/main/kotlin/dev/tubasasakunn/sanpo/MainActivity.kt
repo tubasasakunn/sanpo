@@ -1,4 +1,4 @@
-package com.example.sanpo
+package dev.tubasasakunn.sanpo
 
 import io.flutter.embedding.android.FlutterActivity
 

@@ -18,14 +18,14 @@ class ShareWidgetButton extends StatelessWidget {
     final boundary = globalKey.currentContext?.findRenderObject() as RenderRepaintBoundary;
     final image = await boundary.toImage(pixelRatio: 3);
     final byteData = await image.toByteData(format: ui.ImageByteFormat.png);  // <-- 修正
+    final String textToShare ="らんだむ散歩でいっしょに散歩しよう!!\n https://apphome-6189b.web.app/sanpo";
     
     final buffer = byteData!.buffer.asUint8List();
 
     final directory = await getApplicationDocumentsDirectory();
     final file = File('${directory.path}/image.png');
     await file.writeAsBytes(buffer);
-
-    await Share.shareFiles([file.path]);
+    await Share.shareFiles([file.path], text: textToShare);
     toggleCaptureState();
   }
 
