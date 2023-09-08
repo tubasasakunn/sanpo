@@ -3,8 +3,13 @@ import 'package:sanpo/views/screens/multiple_image_screen.dart';  // 追加
 import 'package:provider/provider.dart';
 import 'package:sanpo/models/random_words_model.dart';
 import 'package:sanpo/models/location_time_model.dart';
+import 'package:sanpo/services/image_service.dart';
 
-void main() {
+
+void main() async{
+  WidgetsFlutterBinding.ensureInitialized();  
+  final imageService = ImageService();
+  await imageService.loadSavedImages();
   runApp(
     MultiProvider(
       providers: [

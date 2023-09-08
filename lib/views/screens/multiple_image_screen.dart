@@ -138,7 +138,7 @@ void initState() {
           color: Theme.of(context).colorScheme.onBackground,
           child: ListView.builder(
           padding: EdgeInsets.only(bottom: 200.0,top: 50),
-          itemCount: max(savedImages.length, locations.length),
+          itemCount: locations.length,
           itemBuilder: (context, index) {
             if (index == locations.length - 1 && !isCapturingImage) {
 

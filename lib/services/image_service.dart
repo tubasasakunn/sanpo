@@ -1,9 +1,10 @@
 import 'dart:io';
 import 'dart:async';
+import 'package:path_provider/path_provider.dart';
 import '../models/picture.dart';
 
 class ImageService {
-    static final ImageService _singleton = ImageService._internal();
+  static final ImageService _singleton = ImageService._internal();
 
   factory ImageService() {
     return _singleton;
@@ -11,19 +12,36 @@ class ImageService {
 
   ImageService._internal();
 
-  // 画像データを保存するためのダミーのリスト
   List<Picture> savedImages = [];
-     // 保存された画像を取得するメソッド
+
+// アプリ起動時に保存された画像をロード
+Future<void> loadSavedImages() async {
+  
+  final dir = await getApplicationDocumentsDirectory();
+  final savedImagePaths = Directory('${dir.path}/saved_images/').listSync();
+  for (var path in savedImagePaths) {
+    if (path is File) {
+      savedImages.add(Picture(File(path.path)));
+    }
+  }
+
+}
+
   List<Picture> getSavedImages() {
     return savedImages;
   }
 
-  // 画像を保存するメソッド
   Future<void> saveImage(Picture picture) async {
-    // ここで実際の保存処理を行います。
-    // データベースやファイルシステムへの保存など
-    savedImages.add(picture);
-    print("Image saved: ${picture.image.path}");
+    final dir = await getApplicationDocumentsDirectory();
+    final targetPath = '${dir.path}/saved_images/${DateTime.now().toIso8601String()}.jpg';
+
+    final targetDir = Directory('${dir.path}/saved_images');
+    if (!targetDir.existsSync()) {
+      targetDir.createSync();
+    }
+
+    await picture.image.copy(targetPath);
+    savedImages.add(Picture(File(targetPath)));
+    print("Image saved: $targetPath");
   }
 }
-
