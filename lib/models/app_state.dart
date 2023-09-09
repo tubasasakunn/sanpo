@@ -17,6 +17,12 @@ class AppStateModel extends ChangeNotifier {
     notifyListeners();
   }
 
+  void renameLabel(String newLabel,int index){
+    labels[index]=newLabel;
+    notifyListeners();
+    saveData();
+  }
+
 
   Future<void> loadSavedData() async {
     final prefs = await SharedPreferences.getInstance();
@@ -43,8 +49,9 @@ class AppStateModel extends ChangeNotifier {
     saveData();
   }
 
+
     void addLabelPuls1() {
-    String newLabel = labels.length.toString();
+    String newLabel = "さんぽ"+labels.length.toString();
     labels.add(newLabel);
     label=newLabel;
     notifyListeners();

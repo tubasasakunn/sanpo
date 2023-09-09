@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:sanpo/views/screens/multiple_image_screen.dart';  // 追加
+import 'package:sanpo/views/screens/history_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:sanpo/models/random_words_model.dart';
 import 'package:sanpo/models/location_time_model.dart';
@@ -141,21 +142,40 @@ class HomeScreen extends StatelessWidget {
                   elevation: 0.0,
                 ),
               ),
+             SizedBox(height: 20),
+              ElevatedButton(
+                onPressed: () {
+                  Provider.of<AppStateModel>(context,listen: false).addLabelPuls1();
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => MultipleImageScreen(),
+                    ),
+                  );
+                },
+                child: Text('New', style: Theme.of(context).textTheme.labelMedium),
+                style: ElevatedButton.styleFrom(
+                  primary: Theme.of(context).colorScheme.background,
+                  elevation: 0.0,
+                ),
+              ),
+              SizedBox(height: 20),
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => HistoryScreen(),
+                    ),
+                  );
+                },
+                child: Text('History', style: Theme.of(context).textTheme.labelMedium),
+                style: ElevatedButton.styleFrom(
+                  primary: Theme.of(context).colorScheme.background,
+                  elevation: 0.0,
+                ),
+              )
             ],
-          ),
-        ),
-        Positioned(
-          bottom: 20,
-          right: 20,
-          child: ElevatedButton(
-            onPressed: () {
-              Provider.of<AppStateModel>(context,listen: false).addLabelPuls1();
-            },
-            child: Text('Reset', style: Theme.of(context).textTheme.labelSmall),
-            style: ElevatedButton.styleFrom(
-              primary: Theme.of(context).colorScheme.background,
-              elevation: 0.0,
-            ),
           ),
         ),
       ],
