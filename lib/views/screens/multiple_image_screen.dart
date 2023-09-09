@@ -31,6 +31,7 @@ class _MultipleImageScreenState extends State<MultipleImageScreen> {
   final dataService = DataService();
   final GlobalKey _globalKey = GlobalKey();
   final InterstitialAdManager interstitialAdManager = InterstitialAdManager();
+  String label = "label1";
 
   Future<void> getImageFromCamera() async {
     final pickedFile = await picker.pickImage(source: ImageSource.camera);
@@ -38,7 +39,7 @@ class _MultipleImageScreenState extends State<MultipleImageScreen> {
     setState(() {
       if (pickedFile != null) {
         _image = File(pickedFile.path);
-        imageService.saveImage(Picture(_image!));
+        imageService.saveImage(this.label,Picture(_image!));
         _loadAndPickRandomWord();
         _getCurrentLocationAndTime();
         interstitialAdManager.showInterstitialAd();
@@ -52,7 +53,7 @@ class _MultipleImageScreenState extends State<MultipleImageScreen> {
     setState(() {
       if (pickedFile != null) {
         _image = File(pickedFile.path);
-        imageService.saveImage(Picture(_image!));
+        imageService.saveImage(this.label,Picture(_image!));
         _loadAndPickRandomWord();
         _getCurrentLocationAndTime();
         interstitialAdManager.showInterstitialAd();
@@ -64,8 +65,8 @@ class _MultipleImageScreenState extends State<MultipleImageScreen> {
     final items = await dataService.loadData('assets/data.json');
     final newLocation = items.location[Random().nextInt(items.location.length)];
     final newTodo = items.todo[Random().nextInt(items.todo.length)];
-    Provider.of<RandomWordsModel>(context, listen: false).addLocation(newLocation);
-    Provider.of<RandomWordsModel>(context, listen: false).addTodo(newTodo);
+    Provider.of<RandomWordsModel>(context, listen: false).addLocation(this.label,newLocation);
+    Provider.of<RandomWordsModel>(context, listen: false).addTodo(this.label,newTodo);
   }
 
   Future<void> _getCurrentLocationAndTime() async {
@@ -97,8 +98,8 @@ class _MultipleImageScreenState extends State<MultipleImageScreen> {
   String formattedTime = DateFormat('HH:mm').format(now);
 
   // LocationTimeModelに現在地と現時刻を追加
-  Provider.of<LocationTimeModel>(context, listen: false).addCity(city);
-  Provider.of<LocationTimeModel>(context, listen: false).addTime(formattedTime);
+  Provider.of<LocationTimeModel>(context, listen: false).addCity(this.label,city);
+  Provider.of<LocationTimeModel>(context, listen: false).addTime(this.label,formattedTime);
 }
 
 
@@ -106,8 +107,18 @@ class _MultipleImageScreenState extends State<MultipleImageScreen> {
 void initState() {
   super.initState();
   interstitialAdManager.interstitialAd();
-  Future.delayed(Duration.zero, () {
-    if (Provider.of<RandomWordsModel>(context, listen: false).location.isEmpty) {
+
+  Future.delayed(Duration.zero, () async {
+    // RandomWordsModel を取得
+    var model = Provider.of<RandomWordsModel>(context, listen: false);
+
+    // データがロードされるまで待つ（もし必要なら）
+    while (!model.isDataLoaded) {
+      await Future.delayed(Duration(milliseconds: 100));
+    }
+
+    // ここでデータがロードされていることが保証される
+    if ((model.labeledLocations[this.label] ?? []).isEmpty) {
       _loadAndPickRandomWord();
     }
   });
@@ -116,11 +127,11 @@ void initState() {
 
   @override
   Widget build(BuildContext context) {
-  List<Picture> savedImages = imageService.getSavedImages();
-  List<String> locations = Provider.of<RandomWordsModel>(context).location;
-  List<String> todos = Provider.of<RandomWordsModel>(context).todo;
-  List<String> citys = Provider.of<LocationTimeModel>(context).city;
-  List<String> times = Provider.of<LocationTimeModel>(context).time;
+  List<Picture> savedImages = imageService.getSavedImagesByLabel(this.label);
+  List<String> locations = Provider.of<RandomWordsModel>(context).labeledLocations[this.label]??[];
+  List<String> todos = Provider.of<RandomWordsModel>(context).labeledTodos[this.label]??[];
+  List<String> citys = Provider.of<LocationTimeModel>(context).labeledCities[this.label]??[];
+  List<String> times = Provider.of<LocationTimeModel>(context).labeledTimes[this.label]??[];
   bool isCapturingImage = false;
   void toggleCaptureState() {
     setState(() {
