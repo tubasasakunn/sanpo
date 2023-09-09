@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:sanpo/views/screens/multiple_image_screen.dart';  // 追加
 import 'package:provider/provider.dart';
 import 'package:sanpo/models/random_words_model.dart';
 import 'package:sanpo/models/location_time_model.dart';
+import 'package:sanpo/models/app_state.dart';
 import 'package:sanpo/services/image_service.dart';
 
 
@@ -15,6 +17,7 @@ void main() async{
       providers: [
         ChangeNotifierProvider(create: (context) => RandomWordsModel()),
         ChangeNotifierProvider(create: (context) => LocationTimeModel()),
+        ChangeNotifierProvider(create: (context) => AppStateModel()),
       ],
       child: MyApp(),
     ),
@@ -80,8 +83,34 @@ class MyApp extends StatelessWidget {
   ),
 ),
       themeMode: isDarkMode ? ThemeMode.dark : ThemeMode.light,
-      home: HomeScreen(),
+      home: FutureBuilder(
+        // アプリの状態モデルのloadSavedDataメソッドを呼び出す
+        future: initializeApp(context),
+        builder: (BuildContext context, AsyncSnapshot snapshot) {
+          // データがロード中の場合、ローディング画面を表示
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Container();  // 任意のローディング画面
+          }
+          // エラーが発生した場合、エラー画面を表示
+          if (snapshot.hasError) {
+            return Container();  // 任意のエラー画面
+          }
+          // データがロードされた場合、ホーム画面を表示
+          return HomeScreen();
+        }),
     );
+  }
+}
+
+Future<void> initializeApp(BuildContext context) async {
+  try{
+  await Future.wait([
+    Provider.of<AppStateModel>(context, listen: false).loadSavedData(),
+    Provider.of<RandomWordsModel>(context, listen: false).loadSavedData(),
+    Provider.of<LocationTimeModel>(context, listen: false).loadSavedData(),
+  ]);
+  }catch(e){
+    print("errrr $e");
   }
 }
 
@@ -120,7 +149,7 @@ class HomeScreen extends StatelessWidget {
           right: 20,
           child: ElevatedButton(
             onPressed: () {
-              // onPressedは空白
+              Provider.of<AppStateModel>(context,listen: false).addLabelPuls1();
             },
             child: Text('Reset', style: Theme.of(context).textTheme.labelSmall),
             style: ElevatedButton.styleFrom(

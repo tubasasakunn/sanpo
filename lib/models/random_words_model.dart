@@ -8,7 +8,7 @@ class RandomWordsModel extends ChangeNotifier {
   bool isDataLoaded = false;
 
   RandomWordsModel() {
-    loadSavedData();
+    print("randomword ok");
   }
 
 Future<void> loadSavedData() async {

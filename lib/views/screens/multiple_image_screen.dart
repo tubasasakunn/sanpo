@@ -14,6 +14,7 @@ import '../widgets/random_words_card.dart';
 import '../widgets/share_button.dart';
 import '../../models/random_words_model.dart';  // ここでRandomWordsModelをインポート
 import '../../models/location_time_model.dart';
+import '../../models/app_state.dart';
 import 'package:location/location.dart' as loc;  // 位置情報を取得するためのパッケージ
 import 'package:intl/intl.dart';
 import 'package:geocoding/geocoding.dart';
@@ -31,7 +32,6 @@ class _MultipleImageScreenState extends State<MultipleImageScreen> {
   final dataService = DataService();
   final GlobalKey _globalKey = GlobalKey();
   final InterstitialAdManager interstitialAdManager = InterstitialAdManager();
-  String label = "label1";
 
   Future<void> getImageFromCamera() async {
     final pickedFile = await picker.pickImage(source: ImageSource.camera);
@@ -39,7 +39,7 @@ class _MultipleImageScreenState extends State<MultipleImageScreen> {
     setState(() {
       if (pickedFile != null) {
         _image = File(pickedFile.path);
-        imageService.saveImage(this.label,Picture(_image!));
+        imageService.saveImage(Provider.of<AppStateModel>(context, listen: false).label,Picture(_image!));
         _loadAndPickRandomWord();
         _getCurrentLocationAndTime();
         interstitialAdManager.showInterstitialAd();
@@ -53,7 +53,7 @@ class _MultipleImageScreenState extends State<MultipleImageScreen> {
     setState(() {
       if (pickedFile != null) {
         _image = File(pickedFile.path);
-        imageService.saveImage(this.label,Picture(_image!));
+        imageService.saveImage(Provider.of<AppStateModel>(context, listen: false).label,Picture(_image!));
         _loadAndPickRandomWord();
         _getCurrentLocationAndTime();
         interstitialAdManager.showInterstitialAd();
@@ -65,8 +65,10 @@ class _MultipleImageScreenState extends State<MultipleImageScreen> {
     final items = await dataService.loadData('assets/data.json');
     final newLocation = items.location[Random().nextInt(items.location.length)];
     final newTodo = items.todo[Random().nextInt(items.todo.length)];
-    Provider.of<RandomWordsModel>(context, listen: false).addLocation(this.label,newLocation);
-    Provider.of<RandomWordsModel>(context, listen: false).addTodo(this.label,newTodo);
+
+    Provider.of<RandomWordsModel>(context, listen: false).addLocation(Provider.of<AppStateModel>(context, listen: false).label,newLocation);
+    Provider.of<RandomWordsModel>(context, listen: false).addTodo(Provider.of<AppStateModel>(context, listen: false).label,newTodo);
+
   }
 
   Future<void> _getCurrentLocationAndTime() async {
@@ -98,8 +100,8 @@ class _MultipleImageScreenState extends State<MultipleImageScreen> {
   String formattedTime = DateFormat('HH:mm').format(now);
 
   // LocationTimeModelに現在地と現時刻を追加
-  Provider.of<LocationTimeModel>(context, listen: false).addCity(this.label,city);
-  Provider.of<LocationTimeModel>(context, listen: false).addTime(this.label,formattedTime);
+  Provider.of<LocationTimeModel>(context, listen: false).addCity(Provider.of<AppStateModel>(context, listen: false).label,city);
+  Provider.of<LocationTimeModel>(context, listen: false).addTime(Provider.of<AppStateModel>(context, listen: false).label,formattedTime);
 }
 
 
@@ -108,30 +110,29 @@ void initState() {
   super.initState();
   interstitialAdManager.interstitialAd();
 
-  Future.delayed(Duration.zero, () async {
-    // RandomWordsModel を取得
-    var model = Provider.of<RandomWordsModel>(context, listen: false);
-
-    // データがロードされるまで待つ（もし必要なら）
-    while (!model.isDataLoaded) {
-      await Future.delayed(Duration(milliseconds: 100));
-    }
-
-    // ここでデータがロードされていることが保証される
-    if ((model.labeledLocations[this.label] ?? []).isEmpty) {
-      _loadAndPickRandomWord();
-    }
-  });
 }
+
+
 
 
   @override
   Widget build(BuildContext context) {
-  List<Picture> savedImages = imageService.getSavedImagesByLabel(this.label);
-  List<String> locations = Provider.of<RandomWordsModel>(context).labeledLocations[this.label]??[];
-  List<String> todos = Provider.of<RandomWordsModel>(context).labeledTodos[this.label]??[];
-  List<String> citys = Provider.of<LocationTimeModel>(context).labeledCities[this.label]??[];
-  List<String> times = Provider.of<LocationTimeModel>(context).labeledTimes[this.label]??[];
+  return Consumer<AppStateModel>(
+      builder: (context, appState, child) {
+            print("tubasasakun------------------------------------------------------------------------");
+            print(Provider.of<RandomWordsModel>(context).labeledLocations);
+    print(Provider.of<AppStateModel>(context).isDataLoaded);
+    print((Provider.of<RandomWordsModel>(context).labeledLocations[Provider.of<AppStateModel>(context).label]??[]));
+    print(Provider.of<AppStateModel>(context).labels);
+    print("tubasasakun------------------------------------------------------------------------");
+    if (Provider.of<AppStateModel>(context).isDataLoaded && (Provider.of<RandomWordsModel>(context).labeledLocations[Provider.of<AppStateModel>(context).label]??[]).isEmpty) {
+      _loadAndPickRandomWord();
+    }
+  List<Picture> savedImages = imageService.getSavedImagesByLabel(Provider.of<AppStateModel>(context).label);
+  List<String> locations = Provider.of<RandomWordsModel>(context).labeledLocations[Provider.of<AppStateModel>(context).label]??[];
+  List<String> todos = Provider.of<RandomWordsModel>(context).labeledTodos[Provider.of<AppStateModel>(context).label]??[];
+  List<String> citys = Provider.of<LocationTimeModel>(context).labeledCities[Provider.of<AppStateModel>(context).label]??[];
+  List<String> times = Provider.of<LocationTimeModel>(context).labeledTimes[Provider.of<AppStateModel>(context).label]??[];
   bool isCapturingImage = false;
   void toggleCaptureState() {
     setState(() {
@@ -186,6 +187,7 @@ void initState() {
     )
     ],) 
   );
-}
+  }
+  );}
 
 }

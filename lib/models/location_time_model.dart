@@ -7,7 +7,7 @@ class LocationTimeModel extends ChangeNotifier {
   Map<String, List<String>> labeledTimes = {};
 
   LocationTimeModel() {
-    loadSavedData();
+    print("location and time ok");
   }
 
 Future<void> loadSavedData() async {
