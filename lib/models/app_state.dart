@@ -6,6 +6,7 @@ class AppStateModel extends ChangeNotifier {
   List<String> labels = [];
   bool isDataLoaded = false;
   String label = "";
+  String mode = "normal";
 
   AppStateModel() {
     print("app state ok");
@@ -15,6 +16,7 @@ class AppStateModel extends ChangeNotifier {
   void setIndex(int index) {
     label = labels[index];
     notifyListeners();
+    saveData(); 
   }
 
   void renameLabel(String newLabel,int index){
@@ -31,6 +33,7 @@ class AppStateModel extends ChangeNotifier {
     labels = List<String>.from(decodedLabels);
     isDataLoaded = true;
     label=prefs.getString('label') ?? labels[0];
+    mode = prefs.getString('mode') ?? "normal";
 
 
     notifyListeners();
@@ -40,6 +43,7 @@ class AppStateModel extends ChangeNotifier {
     final prefs = await SharedPreferences.getInstance();
     prefs.setString('labels', jsonEncode(labels));
     prefs.setString('label', label);
+    prefs.setString('mode', mode);
   }
 
   void addLabel(String newLabel) {

@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 import '../../models/picture.dart';
 import '../widgets/rotatable_image_widget.dart';
 import '../widgets/banner_ad_widget.dart';
+import 'package:sanpo/models/data.dart';
 import '../../services/image_service.dart';
 import '../../services/data_service.dart';
 import '../widgets/show_picker_options.dart';
@@ -29,7 +30,6 @@ class _MultipleImageScreenState extends State<MultipleImageScreen> {
   File? _image;
   final picker = ImagePicker();
   final imageService = ImageService();
-  final dataService = DataService();
   final GlobalKey _globalKey = GlobalKey();
   final InterstitialAdManager interstitialAdManager = InterstitialAdManager();
 
@@ -62,9 +62,11 @@ class _MultipleImageScreenState extends State<MultipleImageScreen> {
   }
 
   Future<void> _loadAndPickRandomWord() async {
-    final items = await dataService.loadData('assets/data.json');
-    final newLocation = items.location[Random().nextInt(items.location.length)];
-    final newTodo = items.todo[Random().nextInt(items.todo.length)];
+
+    final Tuple2<String, String> item = await Provider.of<DataService>(context, listen: false).loadRandomData(context);
+    final newLocation = item.item1;
+    final newTodo = item.item2;
+    
 
     Provider.of<RandomWordsModel>(context, listen: false).addLocation(Provider.of<AppStateModel>(context, listen: false).label,newLocation);
     Provider.of<RandomWordsModel>(context, listen: false).addTodo(Provider.of<AppStateModel>(context, listen: false).label,newTodo);
@@ -119,12 +121,6 @@ void initState() {
   Widget build(BuildContext context) {
   return Consumer<AppStateModel>(
       builder: (context, appState, child) {
-            print("tubasasakun------------------------------------------------------------------------");
-            print(Provider.of<RandomWordsModel>(context).labeledLocations);
-    print(Provider.of<AppStateModel>(context).isDataLoaded);
-    print((Provider.of<RandomWordsModel>(context).labeledLocations[Provider.of<AppStateModel>(context).label]??[]));
-    print(Provider.of<AppStateModel>(context).labels);
-    print("tubasasakun------------------------------------------------------------------------");
     if (Provider.of<AppStateModel>(context).isDataLoaded && (Provider.of<RandomWordsModel>(context).labeledLocations[Provider.of<AppStateModel>(context).label]??[]).isEmpty) {
       _loadAndPickRandomWord();
     }

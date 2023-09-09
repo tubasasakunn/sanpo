@@ -7,15 +7,19 @@ import 'package:sanpo/models/random_words_model.dart';
 import 'package:sanpo/models/location_time_model.dart';
 import 'package:sanpo/models/app_state.dart';
 import 'package:sanpo/services/image_service.dart';
+import 'package:sanpo/services/data_service.dart';
 
 
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();  
   final imageService = ImageService();
   await imageService.loadSavedImages();
+  final dataService = DataService();
+  await dataService.initialize("assets/data.json");
   runApp(
     MultiProvider(
       providers: [
+        Provider<DataService>.value(value: dataService), 
         ChangeNotifierProvider(create: (context) => RandomWordsModel()),
         ChangeNotifierProvider(create: (context) => LocationTimeModel()),
         ChangeNotifierProvider(create: (context) => AppStateModel()),
