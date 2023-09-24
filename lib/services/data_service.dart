@@ -18,23 +18,11 @@ class DataService {
 
   Future<Tuple2<String, String>> loadRandomData(BuildContext context) async {
     final String mode = Provider.of<AppStateModel>(context, listen: false).mode;
-
-
-    print("-------------------------------------");
-    print(mode);
-    print("-------------------------------------");
+    
 
     if (dataModel == null) {
-
-    print("-------------------------------------");
-    print(mode);
-    print("-------------------------------------");
       return Tuple2("", "");
     }
-
-    print("-------------------------------------");
-    print(dataModel);
-    print("-------------------------------------");
 
     if (mode == "normal") {
       return dataModel!.getNormalData();

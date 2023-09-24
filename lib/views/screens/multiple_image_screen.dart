@@ -138,39 +138,38 @@ void initState() {
 
   return Scaffold(
     backgroundColor: Theme.of(context).colorScheme.onBackground,
-    body: Stack(
-      children: [
-        RepaintBoundary(
-      key: _globalKey,
+    body: Column(
+  children: [SizedBox(height: 60),BannerAdWidget(),
+    Expanded(
+      child: RepaintBoundary(
+        key: _globalKey,
         child: Container(
           color: Theme.of(context).colorScheme.onBackground,
           child: ListView.builder(
-          padding: EdgeInsets.only(bottom: 200.0,top: 50),
-          itemCount: locations.length,
-          itemBuilder: (context, index) {
-            if (index == locations.length - 1 && !isCapturingImage) {
+            padding: EdgeInsets.only(bottom: 200.0),
+            itemCount: locations.length,
+            itemBuilder: (context, index) {
+              if (index == locations.length - 1 && !isCapturingImage) {
+                return RandomWordsCard(
+                    todo: todos[index], location: locations[index]);
+              }
 
-          return RandomWordsCard(todo: todos[index], location: locations[index]);
-            }
-            
-            return RandomWordsAndImage(
-              location: locations[index],
-              todo: todos[index],
-              image: index < savedImages.length ? savedImages[index].image : null,
-              time: index < times.length ? times[index] : null,
-              city: index < citys.length ? citys[index] : null,
-            );
-            
-          },
-        ))),
-      Positioned(
-        bottom: 0,
-        left: 0,
-        right: 0,
-        child: BannerAdWidget(),
+              return RandomWordsAndImage(
+                location: locations[index],
+                todo: todos[index],
+                image: index < savedImages.length ? savedImages[index].image : null,
+                time: index < times.length ? times[index] : null,
+                city: index < citys.length ? citys[index] : null,
+              );
+            },
+          ),
+        ),
       ),
-      ],
     ),
+    
+  ],
+)
+,
     
     floatingActionButton: Column(
       mainAxisAlignment: MainAxisAlignment.end,

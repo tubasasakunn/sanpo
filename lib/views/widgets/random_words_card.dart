@@ -20,7 +20,7 @@ class RandomWordsCard extends StatelessWidget {
             child: Container(
               padding: EdgeInsets.all(16),
               child: Text(
-                '$location',
+                '$location ',
                 style: Theme.of(context).textTheme.bodyLarge,
               ),
             ),
@@ -34,7 +34,7 @@ Align(
             child: Container(
               padding: EdgeInsets.all(16),
               child: Text(
-                '$todo',
+                ' $todo',
                 style: Theme.of(context).textTheme.bodyLarge,
               ),
             ),
