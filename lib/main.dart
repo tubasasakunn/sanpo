@@ -9,7 +9,6 @@ import 'package:sanpo/models/app_state.dart';
 import 'package:sanpo/services/image_service.dart';
 import 'package:sanpo/services/data_service.dart';
 
-
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();  
   final imageService = ImageService();

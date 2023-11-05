@@ -13,10 +13,10 @@ import '../widgets/show_picker_options.dart';
 import '../widgets/random_words_and_image.dart';
 import '../widgets/random_words_card.dart';
 import '../widgets/share_button.dart';
-import '../../models/random_words_model.dart';  // ここでRandomWordsModelをインポート
+import '../../models/random_words_model.dart'; // ここでRandomWordsModelをインポート
 import '../../models/location_time_model.dart';
 import '../../models/app_state.dart';
-import 'package:location/location.dart' as loc;  // 位置情報を取得するためのパッケージ
+import 'package:location/location.dart' as loc; // 位置情報を取得するためのパッケージ
 import 'package:intl/intl.dart';
 import 'package:geocoding/geocoding.dart';
 import '../widgets/interstitial_ad_manager.dart';
@@ -28,10 +28,17 @@ class MultipleImageScreen extends StatefulWidget {
 
 class _MultipleImageScreenState extends State<MultipleImageScreen> {
   File? _image;
+  int count = 0; // 追加: count変数
   final picker = ImagePicker();
   final imageService = ImageService();
   final GlobalKey _globalKey = GlobalKey();
   final InterstitialAdManager interstitialAdManager = InterstitialAdManager();
+
+  // ダミーデータのリスト（実際には適切なデータを設定してください）
+  List<String> dummyLocations = ['川沿いを歩きながら', '夜の街を歩きながら', '古い鉄道の脇を歩いて','郊外の田舎道で'];
+  List<String> dummyTodos = ['顔に見えるものを探そう', '自分の影を見つけよう', '自分の足跡を見よう','ポケットに何があるか確認'];
+  List<String> dummyCitys = ['k','日光市', '横浜市', '舞鶴市'];
+  List<String> dummytimes = ['k','12:30', '19:42', '16:32'];
 
   Future<void> getImageFromCamera() async {
     final pickedFile = await picker.pickImage(source: ImageSource.camera);
@@ -39,9 +46,11 @@ class _MultipleImageScreenState extends State<MultipleImageScreen> {
     setState(() {
       if (pickedFile != null) {
         _image = File(pickedFile.path);
-        imageService.saveImage(Provider.of<AppStateModel>(context, listen: false).label,Picture(_image!));
-        _loadAndPickRandomWord();
-        _getCurrentLocationAndTime();
+        imageService.saveImage(
+            Provider.of<AppStateModel>(context, listen: false).label,
+            Picture(_image!));
+        _loadAndPickRandomWord(dummyLocations[count], dummyTodos[count]);
+        _getCurrentLocationAndTime(dummyCitys[count],dummytimes[count]); // ダミーデータから取得
         interstitialAdManager.showInterstitialAd();
       }
     });
@@ -53,66 +62,34 @@ class _MultipleImageScreenState extends State<MultipleImageScreen> {
     setState(() {
       if (pickedFile != null) {
         _image = File(pickedFile.path);
-        imageService.saveImage(Provider.of<AppStateModel>(context, listen: false).label,Picture(_image!));
-        _loadAndPickRandomWord();
-        _getCurrentLocationAndTime();
+        imageService.saveImage(
+            Provider.of<AppStateModel>(context, listen: false).label,
+            Picture(_image!));
+        _loadAndPickRandomWord(dummyLocations[count], dummyTodos[count]); // ダミーデータから取得
+        _getCurrentLocationAndTime(dummyCitys[count],dummytimes[count]); // ダミーデータから取得
         interstitialAdManager.showInterstitialAd();
+        count++; // countをインクリメント
       }
     });
   }
 
-  Future<void> _loadAndPickRandomWord() async {
-
-    final Tuple2<String, String> item = await Provider.of<DataService>(context, listen: false).loadRandomData(context);
-    final newLocation = item.item1;
-    final newTodo = item.item2;
-    
-
-    Provider.of<RandomWordsModel>(context, listen: false).addLocation(Provider.of<AppStateModel>(context, listen: false).label,newLocation);
-    Provider.of<RandomWordsModel>(context, listen: false).addTodo(Provider.of<AppStateModel>(context, listen: false).label,newTodo);
-
+  Future<void> _loadAndPickRandomWord(String newLocation, String newTodo) async {
+    Provider.of<RandomWordsModel>(context, listen: false).addLocation(
+        Provider.of<AppStateModel>(context, listen: false).label, newLocation);
+    Provider.of<RandomWordsModel>(context, listen: false).addTodo(
+        Provider.of<AppStateModel>(context, listen: false).label, newTodo);
   }
 
-  Future<void> _getCurrentLocationAndTime() async {
-  // 現在地を取得
-  loc.Location location = new loc.Location();
-  loc.LocationData? locationData;
-  try {
-    locationData = await location.getLocation();
-  } catch (e) {
-    print("位置情報の取得に失敗: $e");
-  }
-
-  String city = "不明";
-
-  // 位置情報から市名を取得（逆ジオコーディング）
-  if (locationData != null) {
-    try {
-      List<Placemark> placemarks = await placemarkFromCoordinates(
-          locationData.latitude!, locationData.longitude!);
-      Placemark place = placemarks[0];
-      city = place.locality ?? "不明";
-    } catch (e) {
-      print("逆ジオコーディングに失敗: $e");
-    }
-  }
-
-  // 現時刻を取得
-  DateTime now = DateTime.now();
-  String formattedTime = DateFormat('HH:mm').format(now);
-
-  // LocationTimeModelに現在地と現時刻を追加
-  Provider.of<LocationTimeModel>(context, listen: false).addCity(Provider.of<AppStateModel>(context, listen: false).label,city);
+  Future<void> _getCurrentLocationAndTime(city,formattedTime) async {
+      Provider.of<LocationTimeModel>(context, listen: false).addCity(Provider.of<AppStateModel>(context, listen: false).label,city);
   Provider.of<LocationTimeModel>(context, listen: false).addTime(Provider.of<AppStateModel>(context, listen: false).label,formattedTime);
-}
+  }
 
-
-@override
-void initState() {
-  super.initState();
-  interstitialAdManager.interstitialAd();
-
-}
+  @override
+  void initState() {
+    super.initState();
+    interstitialAdManager.interstitialAd();
+  }
 
 
 
@@ -122,7 +99,8 @@ void initState() {
   return Consumer<AppStateModel>(
       builder: (context, appState, child) {
     if (Provider.of<AppStateModel>(context).isDataLoaded && (Provider.of<RandomWordsModel>(context).labeledLocations[Provider.of<AppStateModel>(context).label]??[]).isEmpty) {
-      _loadAndPickRandomWord();
+      _loadAndPickRandomWord(dummyLocations[count], dummyTodos[count]);
+      count++; // countをインクリメント
     }
   List<Picture> savedImages = imageService.getSavedImagesByLabel(Provider.of<AppStateModel>(context).label);
   List<String> locations = Provider.of<RandomWordsModel>(context).labeledLocations[Provider.of<AppStateModel>(context).label]??[];
@@ -139,7 +117,7 @@ void initState() {
   return Scaffold(
     backgroundColor: Theme.of(context).colorScheme.onBackground,
     body: Column(
-  children: [SizedBox(height: 60),BannerAdWidget(),
+  children: [SizedBox(height: 60),
     Expanded(
       child: RepaintBoundary(
         key: _globalKey,
